@@ -20,14 +20,34 @@ public class PlayerGrappler : MonoBehaviour
         {
             Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos = new Vector2(mouse.x, mouse.y);
-
             Vector2 playerPos = transform.position;
             Vector2 direction = mousePos - playerPos;
+
+            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+
             if (direction.magnitude < minDistance) return;
 
             if (direction.magnitude > maxDistance)
             {
                 direction = direction.normalized * maxDistance;
+            }
+            else
+            {
+                if (hit.collider != null)
+                {
+                    line.enabled = true;
+                    line.SetPosition(0, transform.position);
+                    line.SetPosition(1, target);
+                    IInteractable interactable = hit.collider.GetComponent<IInteractable>();
+
+                    if (interactable != null)
+                    {
+                        interactable.GrappleInteract();
+                        line.enabled = false;
+                        return;
+                    }
+                    line.enabled = false;
+                }
             }
 
             target = playerPos + direction;
@@ -38,16 +58,22 @@ public class PlayerGrappler : MonoBehaviour
 
         if (isGrappling)
         {
-            transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
+            Grappling();
+        }
+    }
 
-            line.SetPosition(0, transform.position);
-            line.SetPosition(1, target);
 
-            if (Vector2.Distance(transform.position, target) < 0.1f)
-            {
-                isGrappling = false;
-                line.enabled = false;
-            }
+    private void Grappling()
+    {
+        transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
+
+        line.SetPosition(0, transform.position);
+        line.SetPosition(1, target);
+
+        if (Vector2.Distance(transform.position, target) < 0.1f)
+        {
+            isGrappling = false;
+            line.enabled = false;
         }
     }
 
