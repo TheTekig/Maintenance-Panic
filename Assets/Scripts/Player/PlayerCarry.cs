@@ -5,13 +5,21 @@ public class PlayerCarry : MonoBehaviour
     private Box carriedBox;
     public bool HasItem => carriedBox != null;
 
-    public void setCarried(Box box)
+    public bool TryPickup(Box box)
     {
+        if (HasItem) return false;
+
         carriedBox = box;
+        return true;
     }
 
-    public void ClearCarried()
+    public void Drop()
     {
-               carriedBox = null;
+        carriedBox = null;
+    }
+
+    public Box GetCarried()
+    {
+        return carriedBox;
     }
 }

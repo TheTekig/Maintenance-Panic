@@ -8,15 +8,20 @@ public class Box : MonoBehaviour, IInteractable
 
     private Transform carrier;
     private Rigidbody2D rb;
-    private PlayerCarry player;
+    private Collider2D col;
 
     [SerializeField] private float followSpeed = 12f;
     [SerializeField] private Vector2 carryOffset = new Vector2(0.6f, 0);
 
+    private Collider2D playerCollider;
+
+    private LineRenderer grapplerLine;
+
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        player = FindFirstObjectByType<PlayerCarry>();
+        col = GetComponent<Collider2D>();
     }
  
     void Update()
@@ -26,69 +31,140 @@ public class Box : MonoBehaviour, IInteractable
         {
             transform.position = Vector2.MoveTowards(transform.position, carrier.position, followSpeed * Time.deltaTime);
 
+            if (grapplerLine != null && grapplerLine.enabled )
+            {
+                grapplerLine.SetPosition(0, carrier.position);
+                grapplerLine.SetPosition(1, transform.position);
+            }
+
+
+            // If the box is close enough to the carrier, switch to being carried
             if (Vector2.Distance(transform.position, carrier.position) < 0.3f)
             {
-                isBeingPulled = false;
-                StartCarrying(carrier);
+                PlayerCarry player = carrier.GetComponent<PlayerCarry>();
+
+                if (player != null && player.TryPickup(this))
+                {
+                    StartCarrying(carrier);
+                }
+                else
+                {
+                    CancelPull();
+                }
             }
         }
 
         // If the box is being carried, keep it at the offset position from the carrier
         if (isCarried && carrier != null)
         {
-            transform.position = (Vector2)carrier.position + carryOffset;
+            transform.position = (Vector2)carrier.position + (Vector2)(carrier.right * carryOffset.x + carrier.up * carryOffset.y);
         }
     }
 
-    public void Interact()
+    public void Interact(PlayerCarry player)
     {
         if (isCarried)
         {
-            Drop();
+            Drop(player);
         }
         else
         {
-            if (player != null && !player.HasItem)
+            if (player.TryPickup(this))
             {
                 StartCarrying(player.transform);
-                player.setCarried(this);
             }
         }
     }
 
-    public void GrappleInteract()
+    public void GrappleInteract(PlayerCarry player)
     {
-        if (player != null && !player.HasItem)
-        {
-            carrier = player.transform;
-            isBeingPulled = true;
+        Debug.Log("Grapple Interact with Box");
+        if (player.HasItem) return;
+        
+        carrier = player.transform;
+        playerCollider = player.GetComponent<Collider2D>();
 
-            rb.linearVelocity = Vector2.zero;
-            rb.bodyType = RigidbodyType2D.Kinematic;
+        isBeingPulled = true;
+        isCarried = false;
+
+        rb.linearVelocity = Vector2.zero;
+        rb.bodyType = RigidbodyType2D.Kinematic;
+
+        col.enabled = false;
+
+        if (playerCollider != null)
+        {
+            Physics2D.IgnoreCollision(col, playerCollider, true);
         }
+
+        PlayerGrappler grappler = player.GetComponent<PlayerGrappler>();
+        if (grappler != null)
+        {
+            grapplerLine = grappler.Line;
+            if (grapplerLine != null)
+            {
+                grapplerLine.SetPosition(0, carrier.position);
+                grapplerLine.SetPosition(1, transform.position);
+                grapplerLine.enabled = true;
+            }
+        }
+
     }
 
     public void StartCarrying(Transform who)
     {
         carrier = who;
+
         isCarried = true;
         isBeingPulled = false;
 
         rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Kinematic;
+
+        col.enabled = false;
     }
 
-    public void Drop()
+    public void Drop(PlayerCarry player)
     {
         isCarried = false;
         isBeingPulled = false;
 
         rb.bodyType = RigidbodyType2D.Dynamic;
-        carrier = null;
-        
-        if (player != null)
+        col.enabled = true;
+
+        if (playerCollider != null)
         {
-            player.ClearCarried();
+            Physics2D.IgnoreCollision(col, playerCollider, false);
+            playerCollider = null;
+        }
+
+        HideLine();
+        carrier = null;
+        player.Drop();
+    }
+
+    private void CancelPull()
+    {
+        isBeingPulled = false;
+        
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        col.enabled = true;
+
+        if (playerCollider != null)
+        {
+            Physics2D.IgnoreCollision(col, playerCollider, false);
+            playerCollider = null;
+        }
+        HideLine();
+        carrier = null;
+    }
+
+    private void HideLine()
+    {
+        if (grapplerLine != null)
+        {
+            grapplerLine.enabled = false;
+            grapplerLine = null;
         }
     }
 }

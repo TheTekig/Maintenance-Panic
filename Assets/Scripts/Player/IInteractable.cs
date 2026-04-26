@@ -2,6 +2,6 @@ using UnityEngine;
 
 public interface IInteractable 
 {
-    void Interact();
-    void GrappleInteract();
+    void Interact(PlayerCarry player);
+    void GrappleInteract(PlayerCarry player);
 }

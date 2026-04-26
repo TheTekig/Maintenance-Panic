@@ -4,7 +4,7 @@ public class Machine : MonoBehaviour, IInteractable
 {
     public bool isBroken = true;
 
-    public void Interact()
+    public void Interact(PlayerCarry player)
     {
         Debug.Log("Interacao Perto");
         if (isBroken)
@@ -14,7 +14,7 @@ public class Machine : MonoBehaviour, IInteractable
         }
     }
 
-    public void GrappleInteract()
+    public void GrappleInteract(PlayerCarry player)
     {
         Debug.Log("Interacao com grapple");
         if (isBroken)
