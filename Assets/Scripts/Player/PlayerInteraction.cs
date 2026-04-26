@@ -14,16 +14,6 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-
-            PlayerCarry playerCarry = GetComponent<PlayerCarry>();
-
-            if (playerCarry.HasItem)
-            {
-                Box box = playerCarry.GetCarried();
-                box.Drop(playerCarry);
-                return; // If we're carrying something, interact with it directly and skip the rest
-            }
-
             Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactRange, interactLayer);
 
             foreach (var hit in hits)
@@ -40,6 +30,17 @@ public class PlayerInteraction : MonoBehaviour
                     interactable.Interact(GetComponent<PlayerCarry>());
                     break; // Interact with the first valid object only
                 }
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            PlayerCarry playerCarry = GetComponent<PlayerCarry>();
+            if (playerCarry.HasItem)
+            {
+                Box box = playerCarry.GetCarried();
+                box.Drop(playerCarry);
+                return;
             }
         }
     }

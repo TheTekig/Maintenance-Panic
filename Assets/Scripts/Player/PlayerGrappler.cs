@@ -19,10 +19,13 @@ public class PlayerGrappler : MonoBehaviour
 
     private Vector2 target;
     private PlayerCarry playerCarry;
+    private Playertoolcarry playertoolcarry;
 
     private void Awake()
     {
         playerCarry = GetComponent<PlayerCarry>();
+        playertoolcarry = GetComponent<Playertoolcarry>();
+
     }
 
     void Update()
@@ -40,7 +43,7 @@ public class PlayerGrappler : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
 
-            if (playerCarry.HasItem) return;
+            if (playerCarry.HasItem || playertoolcarry.HasTool) return;
 
             Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos = new Vector2(mouse.x, mouse.y);
