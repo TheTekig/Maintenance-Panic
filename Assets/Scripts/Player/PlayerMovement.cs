@@ -19,13 +19,13 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (!pg.ISgrapling)
-        {
-            float moveX = Input.GetAxisRaw("Horizontal");
-            float moveY = Input.GetAxisRaw("Vertical");
+        if (PlayerState.IsBusy) return;
+        
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveY = Input.GetAxisRaw("Vertical");
 
-            movement = new Vector2(moveX, moveY).normalized;
-        }
+        movement = new Vector2(moveX, moveY).normalized;
+        
 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = mousePos - transform.position;
@@ -36,6 +36,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!pg.ISgrapling) rb.linearVelocity = movement * speed;
+        if (!PlayerState.IsBusy) rb.linearVelocity = movement * speed;
     }
 }
