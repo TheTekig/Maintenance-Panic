@@ -20,6 +20,7 @@ public class WireMinigame : MinigameBase
     protected override void OnBegin()
     {
         panel.SetActive(true);
+        PlayerState.SetBusy(true);
         connectedCount = 0;
         selectedLeft = -1;
         connected = new bool[leftWires.Length];
@@ -77,6 +78,7 @@ public class WireMinigame : MinigameBase
 
             if (connectedCount >= leftWires.Length)
             {
+                PlayerState.SetBusy(false);
                 panel.SetActive(false);
                 Complete(true);
             }

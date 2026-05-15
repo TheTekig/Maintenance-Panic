@@ -16,7 +16,7 @@ public class ToolStorage : MonoBehaviour, IInteractable
     {
         if (onCooldown)
         {
-            cooldownTimer -= Time.time;
+            cooldownTimer -= Time.deltaTime;
             if (cooldownTimer < 0f)
             {
                 onCooldown = false;
@@ -26,7 +26,6 @@ public class ToolStorage : MonoBehaviour, IInteractable
 
     public void Interact(PlayerCarry player)
     {
-        Debug.Log("Interacting With Tool Storage");
         player = player.GetComponent<PlayerCarry>();
 
         if (player == null ) return;

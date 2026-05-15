@@ -28,13 +28,16 @@ public class BoxMachine : MonoBehaviour, IInteractable
             conveyor?.SetActive(false);
             spawner?.SetActive(false);
         }
+        if (problem is StuckBoxProblem)
+        {
+            spawner?.SetActive(false);
+        }
     }
 
     public void Interact(PlayerCarry player)
     {
         if (!HasProblem)
         {
-            Debug.Log("Maquina Sem Problemas");
             return;
         }
 
@@ -47,26 +50,29 @@ public class BoxMachine : MonoBehaviour, IInteractable
     {
         if (MinigameManager.Instance.IsMinigameActive) return;
 
-        void OnFixed()
-        {
-            activeProblem = null;
-            spawner?.SetActive(true);
-            conveyor?.SetActive(true);
-        }
-
         if (activeProblem is MachineBreakProblem mb)
         {
-            mb.TryFix(player, OnFixed);
+            mb.TryFix(player, ClearProblem);
         }
         else if (activeProblem is StuckBoxProblem sb)
         {
-            sb.TryFix(player, OnFixed);
+            sb.TryFix(player, ClearProblem);
         }
         else if (activeProblem is ConveyorJamProblem cj)
         {
-            cj.TryFix(player, OnFixed);
+            cj.TryFix(player, ClearProblem);
         }
     }
+
+    public void ClearProblem()
+    {
+        activeProblem = null;
+        spawner?.SetActive(true);
+        conveyor?.SetActive(true);
+    }
+
+    public Sprite GetToolSprite() => activeProblem.ToolSprite;
+    public Sprite GetProblemSprite() => activeProblem.ProblemSprite;
 
     public SkillCheckMinigame GetSkillCheckMinigame() => minigameSkillCheck;
     public KeySequenceMinigame GetKeySequenceMinigame() => minigameKeySequence;

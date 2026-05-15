@@ -19,6 +19,7 @@ public class KeySequenceMinigame : MinigameBase
     protected override void OnBegin()
     {
         panel.SetActive(true);
+        PlayerState.SetBusy(true);
         running = true;
         currentIndex = 0;
         timer = timeLimit;
@@ -40,6 +41,7 @@ public class KeySequenceMinigame : MinigameBase
         if (timer < 0f)
         {
             running = false;
+            PlayerState.SetBusy(false);
             panel.SetActive(false);
             Complete(false);
             return;
@@ -57,6 +59,7 @@ public class KeySequenceMinigame : MinigameBase
                     if (currentIndex >= sequence.Count)
                     {
                         running = false ;
+                        PlayerState.SetBusy(false);
                         panel.SetActive(false);
                         Complete(true);
                         return;
@@ -75,7 +78,7 @@ public class KeySequenceMinigame : MinigameBase
 
     private void UpdateUI()
     {
-        if (sequenceText = null) return;
+        if (sequenceText == null) return;
 
         string display = "";
         for(int i = 0; i < sequence.Count; i++)

@@ -7,9 +7,14 @@ public class Conveyor : MonoBehaviour
 {
     [SerializeField] private Transform[] waypoints;
 
+
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private float minSpeed = 0f;
     [SerializeField] private float maxSpeed = 8f;
+
+    private float defaultSpeed;
+    private float speedMultiplier = 1f;
+
 
     [SerializeField] private float dangerSpeed = 6f;
     [SerializeField] private float fallChancePerSecond = 0.3f;
@@ -23,6 +28,14 @@ public class Conveyor : MonoBehaviour
     public float MoveSpeed => moveSpeed;
     public float MinSpeed => minSpeed;
     public float MaxSpeed => maxSpeed;
+
+    private IProblem activeProblem;
+    public bool HasProblem => activeProblem != null && !activeProblem.IsFixed;
+
+    private void Start()
+    {
+        defaultSpeed = moveSpeed;
+    }
 
     void Update()
     {
@@ -60,7 +73,7 @@ public class Conveyor : MonoBehaviour
 
             Transform target = waypoints[waypointIndex];
             item.transform.position = Vector2.MoveTowards(
-                item.transform.position, target.position, moveSpeed * Time.deltaTime);
+                item.transform.position, target.position, (defaultSpeed * speedMultiplier) * Time.deltaTime);
 
             if (Vector2.Distance(item.transform.position, target.position) < 0.1f)
             {
@@ -81,11 +94,17 @@ public class Conveyor : MonoBehaviour
         }
     }
 
+    private void LateUpdate()
+    {
+        if(!HasProblem) return;
+        activeProblem.CheckFixed(ClearProblem);
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         Item item = collision.GetComponent<Item>();
         if(item == null) return;
-        if(boxesOnBelt.ContainsKey(item))
+        if(!boxesOnBelt.ContainsKey(item))
         {
             AddBox(item);
         }
@@ -125,7 +144,6 @@ public class Conveyor : MonoBehaviour
             Vector2 ejectDir = new Vector2(Random.Range(-1f, 1f), Random.Range(0.5f, 1f)).normalized;
             rb.AddForce(ejectDir * moveSpeed * 1.5f, ForceMode2D.Impulse);
         }
-        Debug.Log($"Box {item.name} ejected from conveyor due to high speed!");
     }
 
     private void OnReachEnd(Item item)
@@ -182,12 +200,24 @@ public class Conveyor : MonoBehaviour
             if (player.GetCarried() == item) return true;
         }
 
+        Rat[] rats = FindObjectsByType<Rat>(FindObjectsSortMode.None);
+        foreach (var rat in rats)
+        {
+            if (rat.GetBox() == item) return true;
+        }
+
         return false;
+
     }
 
     public void SetSpeed(float speed)
     {
         moveSpeed = Mathf.Clamp(speed, minSpeed, maxSpeed);
+    }
+
+    public void SetSpeedMultplier(float value)
+    {
+        speedMultiplier = value;
     }
 
     public void SetActive(bool active)
@@ -206,6 +236,19 @@ public class Conveyor : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ApplyProblem(IProblem problem)
+    {
+        if (HasProblem) return;
+
+        activeProblem = problem;
+        activeProblem.Activate();
+    }
+
+    public void ClearProblem()
+    {
+        activeProblem = null;
     }
 
     public bool HasBoxes => boxesOnBelt.Count > 0;

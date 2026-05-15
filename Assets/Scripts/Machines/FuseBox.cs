@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using System.Collections;
+using System;
 
 public class FuseBox : MonoBehaviour, IInteractable
 {
@@ -21,11 +22,14 @@ public class FuseBox : MonoBehaviour, IInteractable
 
     [SerializeField] private WireMinigame wireMinigame;
 
-    private Coroutine currentRoutine;
+    public bool HasProblem => activeProblem != null && !activeProblem.IsFixed;
 
-    public void RegisterOutage(PowerOutageProblem problem)
+    private Coroutine currentRoutine;
+    private Action onMachineCleared;
+    public void RegisterOutage(PowerOutageProblem problem, Action onMachineCleared = null)
     {
         activeProblem = problem;
+        this.onMachineCleared = onMachineCleared;
         Debug.Log("Falta de Energia detectada");
 
         if (currentRoutine != null )
@@ -46,7 +50,7 @@ public class FuseBox : MonoBehaviour, IInteractable
 
             if (globalLight != null )
             {
-                globalLight.intensity = Random.Range(0.2f, onIntensity);
+                globalLight.intensity = UnityEngine.Random.Range(0.2f, onIntensity);
             }
 
             yield return new WaitForSeconds(flickerSpeed);
@@ -64,7 +68,6 @@ public class FuseBox : MonoBehaviour, IInteractable
     {
         if (activeProblem == null || activeProblem.IsFixed)
         {
-            Debug.Log("Quadro de Luz funcionando");
             return;
         }
 
@@ -83,13 +86,15 @@ public class FuseBox : MonoBehaviour, IInteractable
             activeProblem.Fix();
             activeProblem = null;
 
+            onMachineCleared?.Invoke();
+            onMachineCleared = null;
+
             if (currentRoutine != null)
             {
                 StopCoroutine(currentRoutine);
             }
 
             currentRoutine = StartCoroutine(RestorePowerSequence());
-            Debug.Log("Energia Restaurada");
         }
         if (activeProblem is PowerOutageProblem pop)
         {
@@ -124,4 +129,7 @@ public class FuseBox : MonoBehaviour, IInteractable
         if (globalLight != null)
             globalLight.intensity = target;
     }
+
+    public Sprite GetProblemSprite() => activeProblem.ProblemSprite;
+    public Sprite GetToolSprite() => activeProblem.ToolSprite;
 }

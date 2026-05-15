@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
 
     private PlayerGrappler pg;
 
+    private float slowMultiplier = 1f;
 
     void Start()
     {
@@ -19,9 +21,17 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (PlayerState.IsBusy) return;
-        
-        float moveX = Input.GetAxisRaw("Horizontal");
+        if (PlayerState.IsBusy)
+        {
+            movement = Vector2.zero;
+            return;
+        }
+        else if (pg.ISgrapling)
+        {
+            return;
+        }
+
+            float moveX = Input.GetAxisRaw("Horizontal");
         float moveY = Input.GetAxisRaw("Vertical");
 
         movement = new Vector2(moveX, moveY).normalized;
@@ -36,6 +46,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!PlayerState.IsBusy) rb.linearVelocity = movement * speed;
+
+        if (!PlayerState.IsBusy) rb.linearVelocity = movement * (speed * slowMultiplier);
+
+    }
+
+    public void SetSlowMultiplier(float value)
+    {
+        slowMultiplier = value;
     }
 }

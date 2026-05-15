@@ -14,6 +14,9 @@ public class PlayerGrappler : MonoBehaviour
     private PlayerCarry playerCarry;
     private bool isGrappling = false;
     private Item grabbedItem;
+
+    private bool blocked = false;
+
     public bool ISgrapling => isGrappling;
 
     private Vector2 target;
@@ -24,54 +27,57 @@ public class PlayerGrappler : MonoBehaviour
     }
 
     void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
+    {   if (!blocked)
         {
-            PlayerState.SetBusy(true);
-
-            Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 mousePos = new Vector2(mouse.x, mouse.y);
-
-            Vector2 playerPos = transform.position;
-            Vector2 direction = mousePos - playerPos;
-            if (direction.magnitude < minDistance) return;
-
-            if (direction.magnitude > maxDistance)
+            if (Input.GetMouseButtonDown(0) && !PlayerState.IsBusy)
             {
-                direction = direction.normalized * maxDistance;
-            }
+                Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector2 mousePos = new Vector2(mouse.x, mouse.y);
 
-            target = playerPos + direction;
-
-            RaycastHit2D hit = Physics2D.Raycast(playerPos, direction.normalized, direction.magnitude, grappleMask);
-            if(hit.collider != null)
-            {
-                if (hit.collider.CompareTag("Collisor") || hit.collider.CompareTag("Machine") || hit.collider.CompareTag("ToolStorage"))
+                Vector2 playerPos = transform.position;
+                Vector2 direction = mousePos - playerPos;
+                if (direction.magnitude < minDistance)
                 {
-                    target = hit.point + hit.normal * 0.5f;
+                    PlayerState.SetBusy(true);
+                    return;
                 }
-                
-                if (hit.collider.CompareTag("Item"))
+                if (direction.magnitude > maxDistance)
                 {
-                    Debug.Log("Colidiu com uma tag 'Item'!");
+                    direction = direction.normalized * maxDistance;
+                }
 
-                    Item item = hit.collider.GetComponent<Item>();
-                    
-                    if (item != null)
+                target = playerPos + direction;
+
+                RaycastHit2D hit = Physics2D.Raycast(playerPos, direction.normalized, direction.magnitude, grappleMask);
+                if (hit.collider != null)
+                {
+                    if (hit.collider.CompareTag("Collisor") || hit.collider.CompareTag("Machine") || hit.collider.CompareTag("ToolStorage"))
                     {
-                       grabbedItem = item;
-                       line.enabled = true;
+                        target = hit.point + hit.normal * 0.5f;
+                    }
 
-                       return;
+                    if (hit.collider.CompareTag("Item"))
+                    {
+
+                        Item item = hit.collider.GetComponent<Item>();
+
+                        if (item != null)
+                        {
+                            grabbedItem = item;
+                            line.enabled = true;
+
+                            return;
+                        }
                     }
                 }
+
+                Debug.DrawRay(playerPos, direction.normalized * direction.magnitude, Color.yellow, 2f);
+
+                isGrappling = true;
+                line.enabled = true;
             }
-
-            Debug.DrawRay(playerPos, direction.normalized * direction.magnitude, Color.yellow, 2f);
-
-            isGrappling = true;
-            line.enabled = true;
         }
+
         if (grabbedItem != null)
         {
             grabbedItem.transform.position = Vector2.MoveTowards(
@@ -80,20 +86,20 @@ public class PlayerGrappler : MonoBehaviour
             line.SetPosition(0, grabbedItem.transform.position);
             line.SetPosition(1, transform.position);
 
-            if(Vector2.Distance(grabbedItem.transform.position, transform.position) < 0.8f)
+            if (Vector2.Distance(grabbedItem.transform.position, transform.position) < 0.8f)
             {
                 IInteractable interactable = grabbedItem.GetComponent<IInteractable>();
                 grabbedItem.Interact(playerCarry);
                 grabbedItem = null;
                 line.enabled = false;
-                PlayerState.SetBusy(false);
                 return;
             }
         }
-
+    
+    
         if (isGrappling)
         {
-            transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, target, speed* Time.deltaTime);
 
             line.SetPosition(0, transform.position);
             line.SetPosition(1, target);
@@ -102,9 +108,14 @@ public class PlayerGrappler : MonoBehaviour
             {
                 isGrappling = false;
                 line.enabled = false;
-                PlayerState.SetBusy(false);
             }
         }
+
+    }
+
+    public void SetBlocked(bool value)
+    {
+        blocked = value;
     }
 
     void OnDrawGizmosSelected()

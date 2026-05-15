@@ -29,51 +29,24 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleInteract()
     {
-        Debug.Log("Handle Interaction");
-
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactRange, interactionLayer);
 
-        foreach(var hit in hits)
+        string[] priority = { "Item", "Machine", "ToolStorage", "BoxStorage" };
+
+        foreach (string tag in priority)
         {
-            IInteractable interactable = hit.GetComponent<IInteractable>();
-            if (interactable == null)
+            foreach (var hit in hits)
             {
-                interactable = hit.GetComponentInParent<IInteractable>();
-            }
-            if (interactable == null) continue;
+                if (!hit.CompareTag(tag)) continue;
 
+                IInteractable interactable = hit.GetComponent<IInteractable>();
+                if (interactable == null)
+                {
+                    interactable = hit.GetComponentInParent<IInteractable>();
+                }
+                if (interactable == null) continue;
 
-            if (hit.CompareTag("Machine"))
-            {
                 interactable.Interact(playerCarry);
-                Debug.Log("Item Found : " + hit.name);
-            }
-
-            if (hit.CompareTag("ToolStorage"))
-            {
-                interactable.Interact(playerCarry);
-            }
-
-            if (hit.CompareTag("BoxStorage"))
-            {
-               interactable.Interact(playerCarry);
-            }
-
-            if (hit.CompareTag("Item"))
-            {
-                Debug.Log("Item Found : " + hit.name);
-                interactable.Interact(playerCarry);
-                return;
-            }
-        }
-
-        if (playerCarry.HasItem)
-        {
-            Item carried = playerCarry.GetCarried();
-            if (carried != null)
-            {
-                Debug.Log("Interacting with carried item");
-                carried.Interact(playerCarry);
                 return;
             }
         }
@@ -81,7 +54,6 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleDrop()
     {
-        Debug.Log("Handle Drop");
         if (playerCarry != null && playerCarry.HasItem)
         {
             playerCarry.GetCarried().Drop(playerCarry);

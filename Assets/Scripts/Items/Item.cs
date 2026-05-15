@@ -3,14 +3,15 @@ using UnityEngine.UI;
 
 public class Item : MonoBehaviour, IInteractable
 {
-    [SerializeField] private float followSpeed = 18f;
+    //[SerializeField] private float followSpeed = 18f;
     [SerializeField] private Vector2 carryOffset = new Vector2(0f, 0.3f);
     [SerializeField] ItemType type;
+
+    [SerializeField] private Transform sprayPoint;
 
     private Transform Carrier;
 
     private bool isCarried = false;
-    private bool isBeingPulled = false;
 
     private Rigidbody2D rb;
     private Collider2D col;
@@ -29,22 +30,16 @@ public class Item : MonoBehaviour, IInteractable
         {
             transform.position = (Vector2)Carrier.position
                 + (Vector2)(Carrier.right * carryOffset.x + Carrier.up * carryOffset.y);
+
+            RotateToMouse();
         }
     }
 
     public void Interact(PlayerCarry player)
     {
-        /*
-        Debug.Log("Start Item Interaction");
-        if (isCarried)
-        {
-            Debug.Log("Drop Item");
-            Drop(player);
-        }*/
         if (player.TryPickup(this))
         {
             StartCarrying(player.transform);
-            Debug.Log("Start Carrying");
         }
     }
 
@@ -73,6 +68,21 @@ public class Item : MonoBehaviour, IInteractable
 
         Carrier = null;
         player.Drop();
+    }
+
+    private void RotateToMouse()
+    {
+        Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 direction = mouse - transform.position;
+        
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        transform.rotation = Quaternion.Euler(0,0,angle);
+    }
+
+    public Transform GetSprayPoint()
+    {
+        return sprayPoint;
     }
 
     public ItemType itemType()
