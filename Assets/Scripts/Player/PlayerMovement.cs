@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (PlayerState.IsBusy)
         {
-            movement = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             return;
         }
         else if (pg.ISgrapling)

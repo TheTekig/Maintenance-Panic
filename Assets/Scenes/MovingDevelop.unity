@@ -17455,6 +17455,7 @@ MonoBehaviour:
   maxDistance: 5
   minDistance: 1
   line: {fileID: 1343419249}
+  wallOffset: 0.05
   grappleMask:
     serializedVersion: 2
     m_Bits: 192

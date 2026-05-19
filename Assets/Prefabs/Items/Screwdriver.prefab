@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1483009632242340880}
   - component: {fileID: 3688282254741812637}
   - component: {fileID: 5965501338543744629}
+  - component: {fileID: 2366830775347899761}
   m_Layer: 7
   m_Name: Screwdriver
   m_TagString: Item
@@ -79,7 +80,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 9074294285706211862, guid: 60e8fe28489149643b6c5e1dc9071ef4, type: 3}
+  m_Sprite: {fileID: -7592883675248715688, guid: 066dfa047915cce408dbc6ec86bc78bb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,9 +103,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1121334919a8c974eba8803c9ad02f4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followSpeed: 18
   carryOffset: {x: 0, y: 0.3}
   type: 1
+  sprayPoint: {fileID: 0}
 --- !u!50 &3688282254741812637
 Rigidbody2D:
   serializedVersion: 5
@@ -166,15 +167,28 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.00090665, y: 0.0018136948}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.25, y: 0.5625}
+    oldSize: {x: 0.1, y: 0.2}
     newSize: {x: 1.25, y: 0.5625}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.25, y: 0.5625}
+  m_Size: {x: 0.071316116, y: 0.17507958}
   m_EdgeRadius: 0
+--- !u!114 &2366830775347899761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8309483475771969442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f88340e3aa9c3344cad11d8089002bec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  burnDuration: 5

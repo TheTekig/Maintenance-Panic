@@ -1,10 +1,12 @@
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerState : MonoBehaviour
 {
     public static PlayerState Instance {get; private set;}
-
     public static bool IsBusy {get; private set;}
+
+    
 
     private void Awake()
     {
@@ -15,5 +17,10 @@ public class PlayerState : MonoBehaviour
     public static void SetBusy(bool busy)
     {
         IsBusy = busy;
+        Debug.Log(
+        "SetBusy = " + busy +
+        "\n" +
+        System.Environment.StackTrace
+    );
     }
 }

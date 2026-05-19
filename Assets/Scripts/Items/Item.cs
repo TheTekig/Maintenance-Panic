@@ -17,15 +17,22 @@ public class Item : MonoBehaviour, IInteractable
     private Collider2D col;
     private Collider2D playerCollider;
 
+    private Burnable burnable;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
+        burnable = GetComponent<Burnable>();
     }
 
     void Update()
     {
+        if (burnable != null && burnable.IsBurning)
+        {
+            Debug.Log("Item on Fire!");
+        }
+
         if (isCarried && Carrier != null)
         {
             transform.position = (Vector2)Carrier.position
@@ -50,7 +57,7 @@ public class Item : MonoBehaviour, IInteractable
 
         rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Kinematic;
-        col.enabled = false;
+        gameObject.layer = LayerMask.NameToLayer("CarriedItem");
     }
 
     public void Drop(PlayerCarry player)
@@ -58,7 +65,7 @@ public class Item : MonoBehaviour, IInteractable
         isCarried = false;
 
         rb.bodyType = RigidbodyType2D.Dynamic;
-        col.enabled = true;
+        gameObject.layer = LayerMask.NameToLayer("Interact");
 
         if (playerCollider != null)
         {

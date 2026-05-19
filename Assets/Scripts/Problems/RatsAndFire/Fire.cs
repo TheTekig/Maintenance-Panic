@@ -63,6 +63,7 @@ public class Fire : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+
         if (!collision.CompareTag("Player")) return;
 
         PlayerMovement move = collision.GetComponent<PlayerMovement>();
@@ -75,6 +76,18 @@ public class Fire : MonoBehaviour
         if (grapple != null)
         {
             grapple.SetBlocked(true);
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        Burnable burnable = collision.GetComponent<Burnable>();
+        if (burnable != null)
+        {
+            if (!burnable.IsBurning)
+            {
+                burnable.StartBurn();
+            }
         }
     }
 

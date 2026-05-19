@@ -18,9 +18,15 @@ public class LeverMinigame : MinigameBase
         {
             l.value = 0f;
         }
-      
-        panel.SetActive(true);
+
+        PlayerGrappler grappler = GetComponent<PlayerGrappler>();
+        if (grappler != null)
+        {
+            grappler.CancelGrapple();
+        }
         PlayerState.SetBusy(true);
+
+        panel.SetActive(true);
         running = true;
         timer = timeLimit;
 

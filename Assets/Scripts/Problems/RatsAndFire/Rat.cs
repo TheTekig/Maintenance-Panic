@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Rat : MonoBehaviour
@@ -28,6 +29,8 @@ public class Rat : MonoBehaviour
     private Rigidbody2D rb;
     private RatState state = RatState.SearchingBox;
 
+    private SpriteRenderer sprite;
+
     private Item targetBox;
     private float eatTimer = 0f;
     private float searchTimer = 0f;
@@ -46,6 +49,7 @@ public class Rat : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        sprite = GetComponent<SpriteRenderer>();
     }
     void Update()
     {
@@ -246,6 +250,7 @@ public class Rat : MonoBehaviour
     public void TakeDamage(float damage)
     {
         health -= damage;
+        StartCoroutine(TakingDamageEffect(2.0f));
         if (health < 0f)
         {
             Kill();
@@ -264,6 +269,13 @@ public class Rat : MonoBehaviour
         }
 
         Destroy(gameObject);
+    }
+
+    public IEnumerator TakingDamageEffect(float time)
+    {
+        sprite.color = Color.green;
+        yield return new WaitForSeconds(time);
+        sprite.color = Color.white;
     }
 
     private void OnDrawGizmosSelected()

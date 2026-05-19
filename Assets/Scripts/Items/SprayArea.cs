@@ -54,6 +54,12 @@ public class SprayArea : MonoBehaviour
             {
                 fire.TakeDamage(damage * Time.deltaTime);
             }
+            Burnable burnable = other.GetComponent<Burnable>(); 
+            if (burnable != null && burnable.IsBurning)
+            {
+                burnable.StopBurn();
+            }
+            
         }
 
         if (sprayType == ItemType.Poison)

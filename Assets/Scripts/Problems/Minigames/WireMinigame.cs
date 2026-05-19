@@ -19,8 +19,14 @@ public class WireMinigame : MinigameBase
 
     protected override void OnBegin()
     {
-        panel.SetActive(true);
+        PlayerGrappler grappler = GetComponent<PlayerGrappler>();
+        if (grappler != null )
+        {
+            grappler.CancelGrapple();
+        }
         PlayerState.SetBusy(true);
+
+        panel.SetActive(true);
         connectedCount = 0;
         selectedLeft = -1;
         connected = new bool[leftWires.Length];

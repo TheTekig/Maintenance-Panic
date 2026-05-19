@@ -18,8 +18,14 @@ public class KeySequenceMinigame : MinigameBase
 
     protected override void OnBegin()
     {
-        panel.SetActive(true);
+        PlayerGrappler grappler = GetComponent<PlayerGrappler>();
+        if (grappler != null)
+        {
+            grappler.CancelGrapple();
+        }
         PlayerState.SetBusy(true);
+
+        panel.SetActive(true);
         running = true;
         currentIndex = 0;
         timer = timeLimit;

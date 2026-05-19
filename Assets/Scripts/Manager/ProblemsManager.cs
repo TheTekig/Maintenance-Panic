@@ -81,7 +81,7 @@ public class ProblemsManager : MonoBehaviour
         }
         else
         {
-
+            TriggerConveyorProblem();
         }
     }
 
@@ -196,6 +196,7 @@ public class ProblemsManager : MonoBehaviour
 
     private IProblem CreatConveyorProblem(Conveyor conveyor)
     {
+        Debug.Log("Chamando Conveyor Problem");
         int roll = Random.Range(0, 2);
             
         switch (roll)

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6460420099244297676}
   - component: {fileID: 1401529991803096491}
   - component: {fileID: 1037380770285540925}
+  - component: {fileID: 4150808577493793109}
   m_Layer: 7
   m_Name: FireExtinguisher
   m_TagString: Item
@@ -80,7 +81,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1818541625063229167, guid: 57e0a98024940b64981511a8f0f0234c, type: 3}
+  m_Sprite: {fileID: -3961781407446926520, guid: d3ee665d04a0fe34d8191e292080ab52, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -103,7 +104,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1121334919a8c974eba8803c9ad02f4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followSpeed: 18
   carryOffset: {x: 0, y: 0.3}
   type: 4
   sprayPoint: {fileID: 2025069718220063405}
@@ -141,17 +141,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.011554137, y: -0.0030810833}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.78125, y: 0.96875}
+    oldSize: {x: 0.2, y: 0.28}
     newSize: {x: 1.5625, y: 1.9375}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.78125, y: 0.96875}
+  m_Size: {x: 0.123434395, y: 0.22620392}
   m_EdgeRadius: 0
 --- !u!50 &1037380770285540925
 Rigidbody2D:
@@ -180,6 +180,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &4150808577493793109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2921823494480845952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f88340e3aa9c3344cad11d8089002bec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  burnDuration: 5
 --- !u!1 &9163039075379128998
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,7 +218,7 @@ Transform:
   m_GameObject: {fileID: 9163039075379128998}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.3, y: 0.208, z: 0}
+  m_LocalPosition: {x: -0.043, y: 0.092, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
