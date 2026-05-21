@@ -92,7 +92,7 @@ public class KeySequenceMinigame : MinigameBase
             string key = sequence[i].ToString();
             if (i < currentIndex)
             {
-                display += $"<color=green>[{key}]</color>";
+                display += $"<color=blue>[{key}]</color>";
             }
             else if (i == currentIndex)
             {

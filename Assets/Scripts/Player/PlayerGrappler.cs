@@ -10,6 +10,7 @@ public class PlayerGrappler : MonoBehaviour
     [SerializeField] private float maxDistance = 5f;
     [SerializeField] private float minDistance = 1f;
     [SerializeField] private LineRenderer line;
+    [SerializeField] private Transform grapplePoint;
 
     [SerializeField] private float wallOffset = 0.5f;
 
@@ -175,7 +176,7 @@ public class PlayerGrappler : MonoBehaviour
         }
         else if (isGrappling)
         {
-            line.SetPosition(0, transform.position);
+            line.SetPosition(0, grapplePoint.position);
             line.SetPosition(1, target);
         }
     }
@@ -192,32 +193,5 @@ public class PlayerGrappler : MonoBehaviour
         blocked = value;
     }
 
-    void OnDrawGizmosSelected()
-    {
 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(transform.position, target);
-
-        // linha ate target
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(transform.position, target);
-
-        Gizmos.color = Color.cyan;
-
-        Vector2 start = debugCastOrigin;
-        Vector2 end = debugCastOrigin + debugCastDirection * debugCastDistance;
-
-        Gizmos.DrawWireCube(start, boxCollider.size);
-        Gizmos.DrawWireCube(end, boxCollider.size);
-
-        Gizmos.DrawLine(start, end);
-
-        // ponto de colisao
-        if (hasHitPoint)
-        {
-            Gizmos.color = Color.green;
-
-            Gizmos.DrawSphere(hitPoint, 0.15f);
-        }
-    }
 }

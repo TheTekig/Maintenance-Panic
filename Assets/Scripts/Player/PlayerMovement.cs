@@ -12,10 +12,13 @@ public class PlayerMovement : MonoBehaviour
 
     private float slowMultiplier = 1f;
 
+    private Animator animator;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         pg = GetComponent<PlayerGrappler>();
+        animator = GetComponent<Animator>();
     }
 
 
@@ -36,12 +39,26 @@ public class PlayerMovement : MonoBehaviour
 
         movement = new Vector2(moveX, moveY).normalized;
         
+        if (movement.x > 0)
+        {
+            animator.SetBool("WalkLeft", false);
+            animator.SetBool("WalkRight", true);
+        }
+        else if (movement.x < 0)
+        {
+            animator.SetBool("WalkRight", false);
+            animator.SetBool("WalkLeft", true);
+        }
+        else
+        {
+            animator.SetBool("WalkRight", false);
+            animator.SetBool("WalkLeft", false);
+        }
+        //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //Vector2 direction = mousePos - transform.position;
 
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 direction = mousePos - transform.position;
-
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        //float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        //transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
     private void FixedUpdate()
