@@ -25,7 +25,7 @@ public class Rat : MonoBehaviour
     [SerializeField] private PlayerCarry playerCarry;
     [SerializeField] private float detectDistance = 2.5f;
 
-
+    private Animator animator;
     private Rigidbody2D rb;
     private RatState state = RatState.SearchingBox;
 
@@ -50,6 +50,7 @@ public class Rat : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
     void Update()
     {
@@ -103,7 +104,6 @@ public class Rat : MonoBehaviour
         }
 
         MoveTowards(targetBox.transform.position, speed);
-
         if (dist < 0.7f)
         {
             RatCarring = true;
@@ -182,6 +182,7 @@ public class Rat : MonoBehaviour
 
     private void MoveTowards(Vector2 target, float spd)
     {
+        animator.SetBool("IsMoving", true);
         Vector2 dir = (target - (Vector2)transform.position).normalized;
         rb.MovePosition((Vector2)transform.position + dir * spd * Time.deltaTime);
     }

@@ -4800,7 +4800,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -4881,7 +4881,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31cc7a94eaf7f44e89492526c71357a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 0.3
   damage: 6
   coneVisual: {fileID: 2687522397194299836}
   particles: {fileID: 7595026619714389987}
@@ -5039,7 +5038,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 0.759434, g: 0.9930271, b: 1, a: 0.70980394}
   m_FlipX: 0

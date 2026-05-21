@@ -16,6 +16,8 @@ public class PlayerGrappler : MonoBehaviour
 
     [SerializeField] private LayerMask grappleMask;
  
+    private Animator animator;
+
     private PlayerCarry playerCarry;
     private bool isGrappling = false;
     private Item grabbedItem;
@@ -42,6 +44,7 @@ public class PlayerGrappler : MonoBehaviour
         playerCarry = GetComponent<PlayerCarry>();
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -49,6 +52,7 @@ public class PlayerGrappler : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0) && !PlayerState.IsBusy)
             {
+                animator.SetTrigger("Grappling");
                 StartGrapple();
             }
         }

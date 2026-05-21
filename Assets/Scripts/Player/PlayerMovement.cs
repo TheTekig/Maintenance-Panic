@@ -54,10 +54,10 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("WalkRight", false);
             animator.SetBool("WalkLeft", false);
         }
-        //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //Vector2 direction = mousePos - transform.position;
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 direction = mousePos - transform.position;
 
-        //float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         //transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 

@@ -45,9 +45,9 @@ public class ProblemAlertUI : MonoBehaviour
     {
         rect = GetComponent<RectTransform>();
 
-        targetPos = Vector2.zero;
+        targetPos = Vector2.zero + new Vector2(200,0);
 
-        exitPos = targetPos + new Vector2(0, -100);
+        exitPos = targetPos + new Vector2(0, -200);
 
         rect.anchoredPosition = exitPos;
 
