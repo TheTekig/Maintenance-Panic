@@ -16,11 +16,17 @@ public class ConveyorPanel : MonoBehaviour, IInteractable
     [SerializeField] private Button closeButton;
     [SerializeField] private Button stopButton;
 
+    private Animator animator;
+
     private bool isOpen = false;
     private bool justOpened = false;
     [SerializeField] public bool isStopped => conveyor != null && conveyor.GetSpeed() <= 0f;
 
 
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
     void Start()
     {
 
@@ -142,21 +148,25 @@ public class ConveyorPanel : MonoBehaviour, IInteractable
 
             if (speed <= 0f)
             {
+                animator.SetFloat("Speed", 0f);
                 warningLabel.text = "Conveyor is stopped.";
                 if (warningColor != null) warningColor.color = Color.gray;
             }
             else if (speed >= danger)
             {
+                animator.SetFloat("Speed", 1f);
                 warningLabel.text = "Warning: Conveyor is at dangerous speed!";
                 if (warningColor != null) warningColor.color = Color.red;
             }
             else if (speed >= danger * 0.75f)
             {
+                animator.SetFloat("Speed", 0.75f);
                 warningLabel.text = "Caution: Conveyor is approaching dangerous speed.";
                 if (warningColor != null) warningColor.color = Color.yellow;
             }
             else
             {
+                animator.SetFloat("Speed", 0.25f);
                 warningLabel.text = "Conveyor at regular speed";
                 if (warningColor != null) warningColor.color = Color.green;
             }

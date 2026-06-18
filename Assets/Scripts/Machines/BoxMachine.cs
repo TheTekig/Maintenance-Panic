@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class BoxMachine : MonoBehaviour, IInteractable
@@ -8,9 +10,38 @@ public class BoxMachine : MonoBehaviour, IInteractable
     [SerializeField] private SkillCheckMinigame minigameSkillCheck;
     [SerializeField] private KeySequenceMinigame minigameKeySequence;
 
+    [SerializeField] private ParticleSystem explosionFX;
+    [SerializeField] private ParticleSystem sparksFX;
+    [SerializeField] private ParticleSystem smokeFX;
+
+    [SerializeField] private SpriteRenderer spriterer;
+
+    [SerializeField] private Color normalColor = Color.white;
+    [SerializeField] private Color warningColor = Color.red;
+
+    [SerializeField] private float pulseSpeed = 1f;
+
+    [SerializeField] private CinemachineImpulseSource impulseSource;
+
+    private Animator animator;
     public bool HasProblem => activeProblem != null && !activeProblem.IsFixed;
 
     private IProblem activeProblem;
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
+    private void Update()
+    {
+        if (HasProblem)
+        {
+            float t = Mathf.PingPong(Time.time * pulseSpeed, 1f);
+
+            spriterer.color = Color.Lerp(normalColor, warningColor, t);
+        }
+    }
 
     public void ApplyProblem(IProblem problem)
     {
@@ -18,6 +49,9 @@ public class BoxMachine : MonoBehaviour, IInteractable
 
         activeProblem = problem;
         activeProblem.Activate();
+
+        StartCoroutine(BreakSequence());
+        animator.SetBool("isBroken", true);
 
         if (problem is MachineBreakProblem)
         {
@@ -66,9 +100,24 @@ public class BoxMachine : MonoBehaviour, IInteractable
 
     public void ClearProblem()
     {
+        sparksFX.Stop();
+        explosionFX.Stop();
+        smokeFX.Stop();
+        animator.SetBool("isBroken", false);
         activeProblem = null;
         spawner?.SetActive(true);
         conveyor?.SetActive(true);
+        spriterer.color = normalColor;
+    }
+
+    private IEnumerator BreakSequence()
+    {
+        sparksFX.Play();
+        yield return new WaitForSeconds(0.5f);
+        impulseSource.GenerateImpulse();
+        explosionFX.Play();
+        ScreenFlash.Instance.Flash(Color.red, 0.8f, 0.5f);
+        smokeFX.Play();
     }
 
     public Sprite GetToolSprite() => activeProblem.ToolSprite;

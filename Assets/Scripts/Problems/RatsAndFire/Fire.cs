@@ -12,11 +12,13 @@ public class Fire : MonoBehaviour
     [SerializeField] private float spreadChance = 0.4f;
 
     private FireNode ownerNode;
+    private FireVolumeEffect volumeEffect;
 
 
     public void Setup(FireNode node)
     {
         ownerNode = node;
+        volumeEffect = GetComponent<FireVolumeEffect>();
 
         FireManager.Instance.RegisterFire();
         InvokeRepeating(nameof(Spread), spreadInterval, spreadInterval);
@@ -77,6 +79,8 @@ public class Fire : MonoBehaviour
         {
             grapple.SetBlocked(true);
         }
+
+        volumeEffect?.OnPlayerEnter(collision.transform);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -111,5 +115,7 @@ public class Fire : MonoBehaviour
         {
             grapple.SetBlocked(false);
         }
+
+        volumeEffect?.OnPlayerExit();
     }
 }
