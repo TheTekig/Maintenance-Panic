@@ -17,7 +17,7 @@ public class ProblemUIManager : MonoBehaviour
 
     private void Start()
     {
-        ShowProblem(test1, test2);
+
     }
 
     public void ShowProblem( Sprite tool, Sprite problem)

@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,6 +21,10 @@ public class GameManager : MonoBehaviour
 
     private int score = 0;
 
+    private int boxes = 0;
+
+    private float playTime;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -39,6 +44,7 @@ public class GameManager : MonoBehaviour
     public void AddScore()
     {
         score += pointsPerBox;
+        boxes += 1;
         RegisterBoxDelivered();
         UpdateUI();
     }
@@ -61,6 +67,7 @@ public class GameManager : MonoBehaviour
     {
         if (gameOver) return;
 
+        playTime += Time.deltaTime;
         idleTimer += Time.deltaTime;
 
         float remainingTime = maxIdleTime - idleTimer;
@@ -88,6 +95,10 @@ public class GameManager : MonoBehaviour
     {
         gameOver = true;
         Debug.Log("Game Over! No boxes delivered in time.");
+        GameStats.Score = score;
+        GameStats.Boxes = boxes;
+        GameStats.TimePlayed = playTime;
+        SceneManager.LoadScene("GameOverScene");
     }
 
     public int GetScore() => score;
